@@ -2,24 +2,27 @@ import styles from "../styles/InvoiceTemplate.module.css";
 import { useState, useRef } from "react";
 
 export default function InvoiceTemplate() {
+  //  Ref for capturing invoice DOM element for PDF 
   const invoiceRef = useRef();
 
+  //  Download invoice as PDF using html2pdf 
   const handleDownload = async () => {
-  const html2pdf = (await import('html2pdf.js')).default; 
-  if (invoiceRef.current) {
-    html2pdf()
-      .set({
-        margin: 0.5,
-        filename: 'invoice.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-      })
-      .from(invoiceRef.current)
-      .save();
-  }
-};
+    const html2pdf = (await import('html2pdf.js')).default;
+    if (invoiceRef.current) {
+      html2pdf()
+        .set({
+          margin: 0.5,
+          filename: 'invoice.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+        })
+        .from(invoiceRef.current)
+        .save();
+    }
+  };
 
+  //  State for invoice data 
   const [invoice, setInvoice] = useState({
     sender: {
       name: "",
@@ -39,6 +42,7 @@ export default function InvoiceTemplate() {
     notes: "",
   });
 
+  //  Handlers for changing field and item values 
   const handleFieldChange = (section, field, value) => {
     setInvoice((prev) => ({
       ...prev,
@@ -52,6 +56,7 @@ export default function InvoiceTemplate() {
     setInvoice((prev) => ({ ...prev, items }));
   };
 
+  //  Add new item to invoice 
   const addItem = () => {
     setInvoice((prev) => ({
       ...prev,
@@ -59,6 +64,7 @@ export default function InvoiceTemplate() {
     }));
   };
 
+  //  Calculations for totals 
   const subtotal = invoice.items.reduce(
     (sum, item) => sum + item.quantity * item.unitPrice,
     0
@@ -71,6 +77,7 @@ export default function InvoiceTemplate() {
       <div className={styles.invoice} ref={invoiceRef}>
         <h1 className={styles.title}>Invoice</h1>
 
+        {/*  Sender and recipient info section  */}
         <div className={styles.sectionRow}>
           <div>
             <h3>From:</h3>
@@ -129,6 +136,7 @@ export default function InvoiceTemplate() {
           </div>
         </div>
 
+        {/*  Invoice details section  */}
         <div className={styles.sectionRow}>
           <div>
             <label>Invoice #</label>
@@ -162,6 +170,7 @@ export default function InvoiceTemplate() {
           </div>
         </div>
 
+        {/*  Items table  */}
         <table className={styles.table}>
           <thead>
             <tr>
@@ -213,6 +222,7 @@ export default function InvoiceTemplate() {
           + Add Item
         </button>
 
+        {/*  Totals and tax section  */}
         <div className={styles.totals}>
           <p>Subtotal: ${subtotal.toFixed(2)}</p>
           <label>
@@ -233,6 +243,7 @@ export default function InvoiceTemplate() {
           </p>
         </div>
 
+        {/*  Notes section  */}
         <div className={styles.notes}>
           <h4>Notes</h4>
           <textarea
@@ -243,6 +254,8 @@ export default function InvoiceTemplate() {
           />
         </div>
       </div>
+
+      {/*  Download button  */}
       <div style={{ textAlign: "center", marginTop: "24px" }}>
         <button onClick={handleDownload} className={styles.downloadBtn}>
           Download PDF
