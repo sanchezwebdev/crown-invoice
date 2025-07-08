@@ -2,8 +2,6 @@
 
 <strong>Crown Invoice</strong> makes invoice generation easy. Built with <strong>Next.js</strong>, users can fill out an invoice directly on-screen and download it as a PDF. No account or login required. Everything works in the browser.
 
-<br/>
-<br/>
 ![Landing Page](https://res.cloudinary.com/dyivstfjt/image/upload/v1751935756/Screenshot_2025-07-07_194906_te77kl.png)
 ---
 
